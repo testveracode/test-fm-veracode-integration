@@ -1,1 +1,4 @@
 
+scan:
+  languages:
+    - javascript
