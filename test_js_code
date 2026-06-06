@@ -147,6 +147,11 @@ app.post("/login", (req, res) => {
 
   res.send({ mongoQuery: query });
 });
+// 8. NoSQL Injection style issue
+app.post("/login", (req, res) => {
+  const user = req.body.username;
+  const pass = req.body.password;
+
   const query = {
     username: user,
     password: pass
@@ -154,6 +159,7 @@ app.post("/login", (req, res) => {
 
   res.send({ mongoQuery: query });
 });
+
   const query = {
     username: user,
     password: pass
