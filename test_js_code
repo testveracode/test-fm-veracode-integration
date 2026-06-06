@@ -172,6 +172,30 @@ app.post("/login", (req, res) => {
     password: pass
   };
 
+  const query = {
+    username: user,
+    password: pass
+  };
+
+  res.send({ mongoQuery: query });
+});
+ const query = {
+    username: user,
+    password: pass
+  };
+
+  const query = {
+    username: user,
+    password: pass
+  };
+
+  res.send({ mongoQuery: query });
+});
+ const query = {
+    username: user,
+    password: pass
+  };
+
   res.send({ mongoQuery: query });
 });
 const query = {
