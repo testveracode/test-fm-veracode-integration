@@ -97,6 +97,18 @@ app.get("/", (req, res) => {
   res.send("Vulnerable JS app running");
 });
 
+// 10. Unsafe eval
+app.get("/calc", (req, res) => {
+  const expression = req.query.expression;
+  const result = eval(expression);
+  res.send({ result });
+});
+
+// 11. Missing security headers
+app.get("/", (req, res) => {
+  res.send("Vulnerable JS app running");
+});
+
 app.listen(3000, () => {
   console.log("Vulnerable app running on port 3000");
 });
