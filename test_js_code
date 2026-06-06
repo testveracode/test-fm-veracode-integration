@@ -104,6 +104,13 @@ app.get("/calc", (req, res) => {
   res.send({ result });
 });
 
+// 10. Unsafe eval
+app.get("/calc", (req, res) => {
+  const expression = req.query.expression;
+  const result = eval(expression);
+  res.send({ result });
+});
+
 // 11. Missing security headers
 app.get("/", (req, res) => {
   res.send("Vulnerable JS app running");
