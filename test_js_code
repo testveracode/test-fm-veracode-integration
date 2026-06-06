@@ -224,7 +224,10 @@ const query = {
     username: user,
     password: pass
   };
-
+const query = {
+    username: user,
+    password: pass
+  };
   res.send({ mongoQuery: query });
 });
 app.listen(3000, () => {
