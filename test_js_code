@@ -167,6 +167,13 @@ app.post("/login", (req, res) => {
 
   res.send({ mongoQuery: query });
 });
+ const query = {
+    username: user,
+    password: pass
+  };
+
+  res.send({ mongoQuery: query });
+});
 app.listen(3000, () => {
   console.log("Vulnerable app running on port 3000");
 });
