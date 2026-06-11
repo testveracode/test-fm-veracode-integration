@@ -34,6 +34,8 @@ app.post("/login", (req, res) => {
   });
 });
 
+//testing the workflow
+
 app.listen(3000, () => {
   console.log("Vulnerable test app running on http://localhost:3000");
 });
