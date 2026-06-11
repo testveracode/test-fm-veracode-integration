@@ -1,337 +1,39 @@
-// vulnerable-app.js
-// DO NOT deploy. For local scanner testing only.
-
+// app.js
 const express = require("express");
-const child_process = require("child_process");
+const { exec } = require("child_process");
 const fs = require("fs");
-const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 
 const app = express();
 app.use(express.json());
 
-// Hardcoded secrets
-const DB_PASSWORD = "admin123";
-const JWT_SECRET = "secret";
-const API_KEY = "sk_live_123456789";
+// Hardcoded secret - for SAST testing
+const API_KEY = "12345-SECRET-KEY";
 
-// 1. SQL Injection
-app.get("/user", (req, res) => {
-  const id = req.query.id;
-  const query = "SELECT * FROM users WHERE id = '" + id + "'";
-  res.send({ query });
-});
-
-// 2. Command Injection
+// Command Injection vulnerability
 app.get("/ping", (req, res) => {
   const host = req.query.host;
-  child_process.exec("ping -c 1 " + host, (err, stdout) => {
+  exec("ping -c 1 " + host, (err, stdout, stderr) => {
+    if (err) return res.status(500).send(stderr);
     res.send(stdout);
   });
 });
 
-// 3. Path Traversal
+// Path Traversal vulnerability
 app.get("/file", (req, res) => {
   const fileName = req.query.name;
-  const content = fs.readFileSync("./files/" + fileName, "utf8");
-  res.send(content);
+  const data = fs.readFileSync("./files/" + fileName, "utf8");
+  res.send(data);
 });
 
-// 4. Insecure JWT Verification
-app.get("/verify", (req, res) => {
-  const token = req.headers.authorization;
-  const decoded = jwt.decode(token); // unsafe: no signature verification
-  res.send(decoded);
-});
-
-// 5. Weak Crypto
-app.get("/hash", (req, res) => {
-  const value = req.query.value;
-  const hash = crypto.createHash("md5").update(value).digest("hex");
-  res.send(hash);
-});
-
-// 6. Insecure Randomness
-app.get("/otp", (req, res) => {
-  const otp = Math.floor(Math.random() * 1000000);
-  res.send({ otp });
-});
-
-// 7. XSS
-app.get("/search", (req, res) => {
-  const q = req.query.q;
-  res.send(`<html><body>Search result for: ${q}</body></html>`);
-});
-
-// 8. NoSQL Injection style issue
+// Insecure logging
 app.post("/login", (req, res) => {
-  const user = req.body.username;
-  const pass = req.body.password;
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-
-// 9. Sensitive Data Exposure
-app.get("/config", (req, res) => {
+  console.log("Login request:", req.body);
   res.send({
-    dbPassword: DB_PASSWORD,
-    jwtSecret: JWT_SECRET,
-    apiKey: API_KEY
+    message: "Logged in",
+    token: API_KEY
   });
 });
 
-// 10. Unsafe eval
-app.get("/calc", (req, res) => {
-  const expression = req.query.expression;
-  const result = eval(expression);
-  res.send({ result });
-});
-
-// 11. Missing security headers
-app.get("/", (req, res) => {
-  res.send("Vulnerable JS app running");
-});
-
-// 10. Unsafe eval
-app.get("/calc", (req, res) => {
-  const expression = req.query.expression;
-  const result = eval(expression);
-  res.send({ result });
-});
-
-// 10. Unsafe eval
-app.get("/calc", (req, res) => {
-  const expression = req.query.expression;
-  const result = eval(expression);
-  res.send({ result });
-});
-
-// 11. Missing security headers
-app.get("/", (req, res) => {
-  res.send("Vulnerable JS app running");
-});
-// 8. NoSQL Injection style issue
-app.post("/login", (req, res) => {
-  const user = req.body.username;
-  const pass = req.body.password;
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-// 8. NoSQL Injection style issue
-app.post("/login", (req, res) => {
-  const user = req.body.username;
-  const pass = req.body.password;
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-// 8. NoSQL Injection style issue
-app.post("/login", (req, res) => {
-  const user = req.body.username;
-  const pass = req.body.password;
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
- const query = {
-    username: user,
-    password: pass
-  };
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
- const query = {
-    username: user,
-    password: pass
-  };
-
-  const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
- const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-const query = {
-    username: user,
-    password: pass
-  };
-const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
-const query = {
-    username: user,
-    password: pass
-  };
-  res.send({ mongoQuery: query });
-});
 app.listen(3000, () => {
-  console.log("Vulnerable app running on port 3000");
+  console.log("Vulnerable test app running on http://localhost:3000");
 });
